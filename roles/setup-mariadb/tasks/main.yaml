@@ -1,0 +1,30 @@
+- name: install mariadb
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: 
+    - mariadb-server
+    - mariadb-client
+    - python3-mysqldb
+    #   Untuk keperluan ansible, create table, user 
+
+- name: update bind address to 0.0.0.0
+  lineinfile:
+    path: /etc/mysql/mariadb.conf.d/50-server.cnf
+    regexp: '^bind-address'
+    line: 'bind-address = 0.0.0.0'
+  notify: 
+    - restart mariadb
+
+- name: add user database
+  mysql_user:
+    name: "{{ db_username }}"
+    password: "{{ db_password }}"
+    priv: '*.*:ALL'
+    host: '%'
+    state: present
+
+- name: create new database
+  mysql_db:
+    name: "{{ db_name }}"
+    state: present

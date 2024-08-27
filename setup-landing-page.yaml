@@ -1,0 +1,11 @@
+- name: Setup Landing Page
+  hosts: landing-page
+  become: yes
+  roles:
+    - roles/update-os
+    - role: roles/landing-page
+      # vars:
+      #   db_host: 34.101.151.198
+      #   db_username: rudi
+      #   db_password: rudi
+      #   db_name: rudi
